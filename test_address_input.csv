@@ -1,0 +1,44 @@
+City,SomeVariable,Address,,AddressRaw,zip
+"El Paso, TX 79927",0.64745958297517,352 Woodside Lane,",#54","352 Woodside Lane,#54",79927
+"Huntsville, TX 77320",0.965659324808244,9883 Beech St.,", #54","9883 Beech St., #54",77320
+"Houston, TX 77015",0.07034081207603,441 William Lane,", 54","441 William Lane, 54",77015
+"El Paso, TX 79924",0.50614928110513,8958 La Sierra Ave.,",54","8958 La Sierra Ave.,54",79924
+"Houston, TX 77081",0.934060852895439,793 Mill Pond Ave. ,54,793 Mill Pond Ave. 54,77081
+"The Colony, TX 75056",0.803728254880141,9333 South Cherry Ave. ,rm 3,9333 South Cherry Ave. rm 3,75056
+"New Braunfels, TX 78130",0.411888219604662,68 University Dr. ,Room 3,68 University Dr. Room 3,78130
+"San Antonio, TX 78210",0.505994671528727,739 West Euclid Street ,#5-4,739 West Euclid Street #5-4,78210
+"Houston, TX 77081",0.275059662588478,694 Marconi Court ,# 5-4,694 Marconi Court # 5-4,77081
+"Deer Park, TX 77536",0.364827068838879,8 Brookside St. ,Apartment # 54,8 Brookside St. Apartment # 54,77536
+"San Antonio, TX 78201",0.616754055924121,8092 Shadow Brook Ave. ,Apartment #54,8092 Shadow Brook Ave. Apartment #54,78201
+"Houston, TX 77083",0.137826884072424,954 South Vale Lane,", Lot #54","954 South Vale Lane, Lot #54",77083
+"Houston, TX 77015",0.742997695842895,8489 Oak Valley Street,", lot#54","8489 Oak Valley Street, lot#54",77015
+"Amarillo, TX 79109",0.48009221881453,5 NE. Sulphur Springs Drive,", lot #54","5 NE. Sulphur Springs Drive, lot #54",79109
+"San Antonio, TX 78207",0.507814569247943,646 Pine Ave. ,", Lot 54","646 Pine Ave. , Lot 54",78207
+"Lewisville, TX 75077",0.506602542360995,33 Laurel St.,", lot 54","33 Laurel St., lot 54",75077
+"San Antonio, TX 78207",0.607624949821062,12 West Pendergast Street,", Lot #54","12 West Pendergast Street, Lot #54",78207
+"Stafford, TX 77477",0.70712371251381,618 Hickory Road,", lot#54","618 Hickory Road, lot#54",77477
+"Donna, TX 78537",0.975429398265851,7846 John Rd.,", lot #54","7846 John Rd., lot #54",78537
+"Friendswood, TX 77546",0.793818107090658,302 Edgemont St.,", Lot 54","302 Edgemont St., Lot 54",77546
+"El Paso, TX 79927",0.488250598799399,352 Woodside LN,", lot 54","352 Woodside LN, lot 54",79927
+"Huntsville, TX 77320",0.396101519053068,9883 Beech St,",lot 54","9883 Beech St,lot 54",77320
+"Houston, TX 77015",0.111332918598091,441 William LN ,Lot 54,441 William LN Lot 54,77015
+"El Paso, TX 79924",0.942993804638011,8958 La Sierra Ave,", apt 54","8958 La Sierra Ave, apt 54",79924
+"Houston, TX 77081",0.567624462616123,793 Mill Pond Ave,",#54","793 Mill Pond Ave,#54",77081
+"The Colony, TX 75056",0.87531140732812,9333 South Cherry Ave south,", #54","9333 South Cherry Ave south, #54",75056
+"New Braunfels, TX 78130",0.134067220967049,68 University Drv,", 54","68 University Drv, 54",78130
+"San Antonio, TX 78210",0.812367635187862,739 West Euclid Str,",54","739 West Euclid Str,54",78210
+"Houston, TX 77081",0.487247934116747,694 Marconi Ct ,54,694 Marconi Ct 54,77081
+"Deer Park, TX 77536",0.449365891100122,8 Brookside St,rm 3,8 Brookside Strm 3,77536
+"San Antonio, TX 78201",0.182889815084428,8092 Shadow Brook Ave,Room 3,8092 Shadow Brook AveRoom 3,78201
+"Houston, TX 77083",0.129182786401635,954 South Vale Ln. ,#5-4,954 South Vale Ln. #5-4,77083
+"Houston, TX 77015",0.733425020122217,8489 Oak Valley Street ,# 5-4,8489 Oak Valley Street # 5-4,77015
+"Amarillo, TX 79109",0.037536694239179,5 NE. Sulphur Springs Drv.,Apartment # 54,5 NE. Sulphur Springs Drv.Apartment # 54,79109
+"San Antonio, TX 78207",0.358783213872767,646 Pine Ave ,Apartment #54,646 Pine Ave Apartment #54,78207
+"Lewisville, TX 75077",0.141563272562838,33 Laurel Street ,Apartment 54,33 Laurel Street Apartment 54,75077
+"San Antonio, TX 78207",0.751222318831744,12 W Pendergast Street ,Apt. # 54,12 W Pendergast Street Apt. # 54,78207
+"Stafford, TX 77477",0.588130625142696,618 Hickory Road ,# 54,618 Hickory Road # 54,77477
+"Donna, TX 78537",0.486399880619143,7846 John Rd,APT # 54,7846 John RdAPT # 54,78537
+"Friendswood, TX 77546",0.637820078972718,302 Edgemont St ,#54,302 Edgemont St #54,77546
+"San Antonio, TX 78207",0.461456680104283,1777 Milojos Ranch Drive ,Apt. 54,1777 Milojos Ranch Drive Apt. 54,78537
+"San Antonio, TX 78207",0.72093007135522,1777 Milojos Ranch Drive ,APT# 54,1777 Milojos Ranch Drive APT# 54,78537
+"San Antonio, TX 78207",0.152605929798866,1777 Milojos Ranch Drive ,APT 54,1777 Milojos Ranch Drive APT 54,78537
