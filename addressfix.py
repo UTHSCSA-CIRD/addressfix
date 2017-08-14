@@ -22,6 +22,7 @@ from ConfigParser import SafeConfigParser
 from contextlib import contextmanager
 from operator import itemgetter
 from streetaddress import StreetAddressParser
+import usaddress as ua
 import logging
 import csv
 import re # maybe not needed
@@ -58,6 +59,7 @@ def config(arguments={}):
     return opt
 
 class Addfix:
+    addrparts = set(['StreetNamePostType', 'OccupancyIdentifier', 'OccupancyType', 'StreetNamePreDirectional', 'AddressNumber', 'StreetNamePostDirectional', 'StreetName'])
     def __init__(self, listargs=[], args={}):
         if args == {}:
             args = docopt(__doc__, listargs)
@@ -92,6 +94,7 @@ class Addfix:
 		oo1.update((kk,'') for kk,vv in oo1.items() if vv is None)
 		oo1 = ' '.join(itemgetter('house','street_name','street_type')(oo1))
 		csvout.writerow(itemgetter(*self.keep)(line1) + (oo1,))
+	    import pdb; pdb.set_trace()
 	    for linen in inrows:
 		oo1 = sp.parse(linen[self.address])
 		oo1.update((kk,'') for kk,vv in oo1.items() if vv is None)
@@ -99,6 +102,11 @@ class Addfix:
 		csvout.writerow(itemgetter(*self.keep)(linen) + (oo1,))
 		#csvout.writerow(itemgetter(*self.keep)(linen) + (linen[self.address]+' FOO',))
 		# cycle through rows, write keep columns and standardized column
+		'''
+		# for usaddress version of above...
+		oo1 = ua.tag(linen[self.address])
+		for ii in stparts - set(linen[0].keys()): linen[0][ii] = ''
+		' '.join(itemgetter('AddressNumber','StreetNamePreDirectional','StreetName','StreetNamePostType','StreetNamePostDirectional')(linen[0]))
 
 
 if __name__=='__main__':
