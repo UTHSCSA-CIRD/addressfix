@@ -84,7 +84,6 @@ class Addfix:
 	    if not self.address: self.address = len(line1) - 1
 	    # use keep to identify what to keep in outheader and append result column header
 	    if not self.keep: self.keep = range(0,len(line1))
-	    import pdb ; pdb.set_trace()
 	    # if hashead, write a header out, otherwise just do to first line what will be done to all
 	    if(hashead): csvout.writerow(itemgetter(*self.keep)(line1)+('AddrFix',))
 	    # the FOO is a placeholder, to be replaced with normalized value from streetaddress
