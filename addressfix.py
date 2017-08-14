@@ -44,6 +44,7 @@ def config(arguments={}):
     cp = SafeConfigParser()
     cp.readfp(open(config_fn, 'r'), filename=config_fn)
     opt = cp._sections
+    import pdb; pdb.set_trace()
     if arguments == {}:
         opt['address'] = None
         opt['keep'] = None
@@ -83,7 +84,7 @@ class Addfix:
 if __name__=='__main__':
     args = docopt(__doc__, argv=argv[1:])
     import pdb; pdb.set_trace()
-    if args['-f']:
+    if args['--infile']:
         log.info(Addfix(args=args).doFix())
     else:
 	log.error('The -f argument must specify the name of a CSV file')
