@@ -26,6 +26,7 @@ import usaddress as ua
 import logging
 import csv
 import re # maybe not needed
+import json
 
 
 log = logging.getLogger(__name__)
@@ -49,17 +50,18 @@ def config(arguments={}):
     cp = SafeConfigParser()
     cp.readfp(open(config_fn, 'r'), filename=config_fn)
     opt = cp._sections
+    opt['chosen_formats'] = json.loads(opt['chosen_formats']['chosen']);
+    for ii in opt['chosen_formats']: opt['formats'][ii] = json.loads(opt['formats'][ii])
     if arguments == {}:
         opt['address'] = None
         opt['keep'] = None
     else:
-        opt['address'] = int(arguments['--address']) or None
-        opt['keep'] = [int(ii) for ii in arguments['--keep'].split(',')] or None
+        opt['address'] = int(arguments['--address']) if arguments['--address'] else None
+        opt['keep'] = [int(ii) for ii in arguments['--keep'].split(',')] if arguments ['--keep'] else None
         opt['infile'] = arguments['--infile'] or None
     return opt
 
 class Addfix:
-    addrparts = set(['StreetNamePostType', 'OccupancyIdentifier', 'OccupancyType', 'StreetNamePreDirectional', 'AddressNumber', 'StreetNamePostDirectional', 'StreetName'])
     def __init__(self, listargs=[], args={}):
         if args == {}:
             args = docopt(__doc__, listargs)
@@ -67,7 +69,13 @@ class Addfix:
         self.address = opt['address']
         self.keep = opt['keep']
         self.infile = opt['infile']
+        self.chosen_formats = opt['chosen_formats']
+        self.formats = opt['formats']
+        self.alladdrparts = set(['StreetNamePostType', 'OccupancyIdentifier', 'OccupancyType',
+				 'StreetNamePreDirectional', 'AddressNumber', 'StreetNamePostDirectional',
+				 'StreetName'])
         self.status = ''
+	
     def doFix(self):
 	# create file-handle for infile
 	self.outfile = 'out_'+self.infile
@@ -87,19 +95,30 @@ class Addfix:
 	    # use keep to identify what to keep in outheader and append result column header
 	    if not self.keep: self.keep = range(0,len(line1))
 	    # if hashead, write a header out, otherwise just do to first line what will be done to all
-	    if(hashead): csvout.writerow(itemgetter(*self.keep)(line1)+('AddrFix',))
+	    #import pdb; pdb.set_trace()
+	    if(hashead): csvout.writerow(itemgetter(*self.keep)(line1)+tuple(self.chosen_formats))
 	    # the FOO is a placeholder, to be replaced with normalized value from streetaddress
 	    else: 
-		oo1 = sp.parse(line1[self.address])
-		oo1.update((kk,'') for kk,vv in oo1.items() if vv is None)
-		oo1 = ' '.join(itemgetter('house','street_name','street_type')(oo1))
-		csvout.writerow(itemgetter(*self.keep)(line1) + (oo1,))
-	    import pdb; pdb.set_trace()
+		tagged = ua.tag(line1[self.address])
+		for ii in self.alladdrparts - set(tagged[0].keys()): tagged[0][ii] = ''
+		oo = []
+		for ii in self.chosen_formats:
+		  oo += [' '.join([jj for jj in itemgetter(*self.formats[ii]['addrparts'])(tagged[0]) if jj != ''])]
+		csvout.writerow(itemgetter(*self.keep)(line1) + tuple(oo))
+		#oo1 = sp.parse(line1[self.address])
+		#oo1.update((kk,'') for kk,vv in oo1.items() if vv is None)
+		#oo1 = ' '.join(itemgetter('house','street_name','street_type')(oo1))
+		#csvout.writerow(itemgetter(*self.keep)(line1) + (oo1,))
 	    for linen in inrows:
-		oo1 = sp.parse(linen[self.address])
-		oo1.update((kk,'') for kk,vv in oo1.items() if vv is None)
-		oo1 = ' '.join(itemgetter('house','street_name','street_type')(oo1))
-		csvout.writerow(itemgetter(*self.keep)(linen) + (oo1,))
+		tagged = ua.tag(linen[self.address])
+		#oo1 = sp.parse(linen[self.address])
+		for ii in self.alladdrparts - set(tagged[0].keys()): tagged[0][ii] = ''
+		oo = []
+		for ii in self.chosen_formats:
+		  oo += [' '.join([jj for jj in itemgetter(*self.formats[ii]['addrparts'])(tagged[0]) if jj != ''])]
+		#oo1.update((kk,'') for kk,vv in oo1.items() if vv is None)
+		#oo1 = ' '.join(itemgetter('house','street_name','street_type')(oo1))
+		csvout.writerow(itemgetter(*self.keep)(linen) + tuple(oo))
 		#csvout.writerow(itemgetter(*self.keep)(linen) + (linen[self.address]+' FOO',))
 		# cycle through rows, write keep columns and standardized column
 		'''
@@ -107,6 +126,7 @@ class Addfix:
 		oo1 = ua.tag(linen[self.address])
 		for ii in stparts - set(linen[0].keys()): linen[0][ii] = ''
 		' '.join(itemgetter('AddressNumber','StreetNamePreDirectional','StreetName','StreetNamePostType','StreetNamePostDirectional')(linen[0]))
+		'''
 
 
 if __name__=='__main__':
