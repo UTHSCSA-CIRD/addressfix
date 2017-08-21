@@ -288,10 +288,10 @@ class Addfix:
 		#csvout.writerow(itemgetter(*self.keep)(line1) + (oo1,))
 		'''
 	    for row in inrows:
-		addr = row[self.address].replace('"','').replace("'",'')
-		try: tagged = ua.tag(addr)[0]
+		row[self.address] = row[self.address].replace('"','').replace("'",'')
+		try: tagged = ua.tag(row[self.address])[0]
 		except ua.RepeatedLabelError: 
-		    csvout.writerow(itemgetter(*self.keep)(row) + tuple([addr]*len(self.chosen_formats)))
+		    csvout.writerow(itemgetter(*self.keep)(row) + tuple(row[self.address]*len(self.chosen_formats)))
 		else:
 		    ooii = []
 		    for ii in self.chosen_formats: 
@@ -303,7 +303,9 @@ class Addfix:
 				else:
 				    oojj += [tagged[jj]]
 			ooii += [' '.join(oojj)]
-		    csvout.writerow(itemgetter(*self.keep)(row) + tuple(ooii))
+		    try: csvout.writerow(itemgetter(*self.keep)(row) + tuple(ooii))
+		    except: 
+			import pdb; pdb.set_trace()
 		'''
 		#oo1 = sp.parse(linen[self.address])
 		for ii in self.alladdrparts - set(tagged[0].keys()): tagged[0][ii] = ''
