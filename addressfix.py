@@ -288,18 +288,22 @@ class Addfix:
 		#csvout.writerow(itemgetter(*self.keep)(line1) + (oo1,))
 		'''
 	    for row in inrows:
-		tagged = ua.tag(row[self.address])[0]
-		ooii = []
-		for ii in self.chosen_formats: 
-		    oojj = []
-		    for jj in self.formats[ii]['addrparts']: 
-			if jj in tagged.keys():
-			    if jj in self.formats[ii]['abbr']:
-				oojj += [nrsfx(re.sub('\\.','',tagged[jj]))]
-			    else:
-				oojj += [tagged[jj]]
-		    ooii += [' '.join(oojj)]
-		csvout.writerow(itemgetter(*self.keep)(row) + tuple(ooii))
+		addr = row[self.address].replace('"','').replace("'",'')
+		try: tagged = ua.tag(addr)[0]
+		except ua.RepeatedLabelError: 
+		    csvout.writerow(itemgetter(*self.keep)(row) + tuple([addr]*len(self.chosen_formats)))
+		else:
+		    ooii = []
+		    for ii in self.chosen_formats: 
+			oojj = []
+			for jj in self.formats[ii]['addrparts']: 
+			    if jj in tagged.keys():
+				if jj in self.formats[ii]['abbr']:
+				    oojj += [nrsfx(re.sub('\\.','',tagged[jj]))]
+				else:
+				    oojj += [tagged[jj]]
+			ooii += [' '.join(oojj)]
+		    csvout.writerow(itemgetter(*self.keep)(row) + tuple(ooii))
 		'''
 		#oo1 = sp.parse(linen[self.address])
 		for ii in self.alladdrparts - set(tagged[0].keys()): tagged[0][ii] = ''
