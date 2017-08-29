@@ -277,6 +277,7 @@ class Addfix:
 		''' Escaped quotation marks confuse csvout.writerow() and
 		are not a standard part of street addresses as far as I know so
 		might as well get rid of them.'''
+		# here can we perhaps add more replacements, such as for other punctuation and non-standard whitespace?
 		row[self.address] = row[self.address].replace('"','').replace("'",'')
 		try: tagged = ua.tag(row[self.address])[0]
 		except ua.RepeatedLabelError: 
@@ -291,7 +292,11 @@ class Addfix:
 				    oojj += [nrsfx(re.sub('\\.','',tagged[jj]))]
 				else:
 				    oojj += [tagged[jj]]
-			ooii += [' '.join(oojj)]
+			if len(oojj) == 1:
+			  # if something went wierd and there is only one part of this address, use the original address instead
+			  ooii += [row[self.address]]
+			else:
+			  ooii += [' '.join(oojj)]
 		    try: csvout.writerow(itemgetter(*self.keep)(row) + tuple(ooii))
 		    except: 
 			import pdb; pdb.set_trace()
