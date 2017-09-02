@@ -270,54 +270,36 @@ class Addfix:
 	    # use keep to identify what to keep in outheader and append result column header
 	    if not self.keep: self.keep = range(0,len(line1))
 	    # if hashead, write a header out, otherwise just do to first line what will be done to all
-	    #import pdb; pdb.set_trace()
 	    if(hashead): csvout.writerow(itemgetter(*self.keep)(line1)+tuple(self.chosen_formats))
-	    # the FOO is a placeholder, to be replaced with normalized value from streetaddress
 	    else: 
 		incsv.seek(0) # this resets inrows to the first row also
-		'''
-		tagged = ua.tag(line1[self.address])
-		for ii in self.alladdrparts - set(tagged[0].keys()): tagged[0][ii] = ''
-		oo = []
-		for ii in self.chosen_formats:
-		  oo += [' '.join([jj for jj in itemgetter(*self.formats[ii]['addrparts'])(tagged[0]) if jj != ''])]
-		csvout.writerow(itemgetter(*self.keep)(line1) + tuple(oo))
-		#oo1 = sp.parse(line1[self.address])
-		#oo1.update((kk,'') for kk,vv in oo1.items() if vv is None)
-		#oo1 = ' '.join(itemgetter('house','street_name','street_type')(oo1))
-		#csvout.writerow(itemgetter(*self.keep)(line1) + (oo1,))
-		'''
 	    for row in inrows:
-		tagged = ua.tag(row[self.address])[0]
-		ooii = []
-		for ii in self.chosen_formats: 
-		    oojj = []
-		    for jj in self.formats[ii]['addrparts']: 
-			if jj in tagged.keys():
-			    if jj in self.formats[ii]['abbr']:
-				oojj += [nrsfx(re.sub('\\.','',tagged[jj]))]
-			    else:
-				oojj += [tagged[jj]]
-		    ooii += [' '.join(oojj)]
-		csvout.writerow(itemgetter(*self.keep)(row) + tuple(ooii))
-		'''
-		#oo1 = sp.parse(linen[self.address])
-		for ii in self.alladdrparts - set(tagged[0].keys()): tagged[0][ii] = ''
-		oo = []
-		for ii in self.chosen_formats:
-		  oo += [' '.join([jj for jj in itemgetter(*self.formats[ii]['addrparts'])(tagged[0]) if jj != ''])]
-		#oo1.update((kk,'') for kk,vv in oo1.items() if vv is None)
-		#oo1 = ' '.join(itemgetter('house','street_name','street_type')(oo1))
-		csvout.writerow(itemgetter(*self.keep)(linen) + tuple(oo))
-		#csvout.writerow(itemgetter(*self.keep)(linen) + (linen[self.address]+' FOO',))
-		# cycle through rows, write keep columns and standardized column
-		'''
-		'''
-		# for usaddress version of above...
-		oo1 = ua.tag(linen[self.address])
-		for ii in stparts - set(linen[0].keys()): linen[0][ii] = ''
-		' '.join(itemgetter('AddressNumber','StreetNamePreDirectional','StreetName','StreetNamePostType','StreetNamePostDirectional')(linen[0]))
-		'''
+		''' Escaped quotation marks confuse csvout.writerow() and
+		are not a standard part of street addresses as far as I know so
+		might as well get rid of them.'''
+		# here can we perhaps add more replacements, such as for other punctuation and non-standard whitespace?
+		row[self.address] = row[self.address].replace('"','').replace("'",'')
+		try: tagged = ua.tag(row[self.address])[0]
+		except ua.RepeatedLabelError: 
+		    csvout.writerow(itemgetter(*self.keep)(row) + tuple(row[self.address]*len(self.chosen_formats)))
+		else:
+		    ooii = []
+		    for ii in self.chosen_formats: 
+			oojj = []
+			for jj in self.formats[ii]['addrparts']: 
+			    if jj in tagged.keys():
+				if jj in self.formats[ii]['abbr']:
+				    oojj += [nrsfx(re.sub('\\.','',tagged[jj]))]
+				else:
+				    oojj += [tagged[jj]]
+			if len(oojj) == 1:
+			  # if something went wierd and there is only one part of this address, use the original address instead
+			  ooii += [row[self.address]]
+			else:
+			  ooii += [' '.join(oojj)]
+		    try: csvout.writerow(itemgetter(*self.keep)(row) + tuple(ooii))
+		    except: 
+			import pdb; pdb.set_trace()
 
 
 if __name__=='__main__':
