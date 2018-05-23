@@ -21,7 +21,7 @@ from docopt import docopt
 from ConfigParser import SafeConfigParser
 from contextlib import contextmanager
 from operator import itemgetter
-from streetaddress import StreetAddressParser
+#from streetaddress import StreetAddressParser
 import usaddress as ua
 import logging
 import csv
@@ -31,7 +31,7 @@ import json
 
 log = logging.getLogger(__name__)
 config_default = './config.ini'
-sp = StreetAddressParser()
+#sp = StreetAddressParser()
 
 '''
 Now it works. Let's see how well.
