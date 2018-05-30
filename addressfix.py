@@ -305,8 +305,6 @@ class Addfix:
 		is mapped to what. Note that to express a unicode character you have to
 		do u'X' rather than 'X', and in this case it's not a type-able character
 		so X is an escaped sequence.
-		
-		All of this still gets defeated by
 		'''
 		row[self.address] = ' '.join(unicode(row[self.address],errors='replace').translate({
 		  ord('"'):None, ord("'"):None, ord(u'\ufffd'):ord(' ')
