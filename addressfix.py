@@ -21,17 +21,18 @@ from docopt import docopt
 from ConfigParser import SafeConfigParser
 from contextlib import contextmanager
 from operator import itemgetter
-from streetaddress import StreetAddressParser
+#from streetaddress import StreetAddressParser
 import usaddress as ua
 import logging
 import csv
 import re
 import json
+import string
 
 
 log = logging.getLogger(__name__)
 config_default = './config.ini'
-sp = StreetAddressParser()
+#sp = StreetAddressParser()
 
 '''
 Now it works. Let's see how well.
@@ -257,6 +258,14 @@ class Addfix:
 	with open(self.infile,'rb') as incsv:
 	    # sniff to check dialect
 	    dialect = csv.Sniffer().sniff(incsv.read(1024))
+	    '''this is to make it ignore quote characters... they 
+	    will all get translated out of the output later on 
+	    anyway... and maybe later we should expect a bug
+	    where the NON address fields have extra quotes in
+	    them for certain input formats, but at least this
+	    is working now with our format...
+	    '''
+	    dialect.quoting = csv.QUOTE_NONE
 	    incsv.seek(0)
 	    # create file-handle for outfile
 	    csvout = csv.writer(sys.stdout,dialect=dialect)
@@ -274,11 +283,35 @@ class Addfix:
 	    else: 
 		incsv.seek(0) # this resets inrows to the first row also
 	    for row in inrows:
-		''' Escaped quotation marks confuse csvout.writerow() and
-		are not a standard part of street addresses as far as I know so
-		might as well get rid of them.'''
-		# here can we perhaps add more replacements, such as for other punctuation and non-standard whitespace?
-		row[self.address] = row[self.address].replace('"','').replace("'",'')
+		'''The enclosing ' '.join(FOO.split()) pattern is a fast way of
+		replacing runs of various types of whitespace with a single
+		space character. https://stackoverflow.com/a/2077944
+		
+		The FOO in the above pseudocode is the original address string
+		but converted to unicode with bad characters replaced with \ufffd
+		instead of erroring out. https://stackoverflow.com/a/12468274
+		
+		Then we do a bunch of translating-- remove quote marks (both kinds)
+		by translating them to None, and then replace the unirubbish with 
+		spaces (and if your address has a malformed ligature or something in 
+		the middle of a street name, tough luck, now you live on 
+		'Encyclop Dia Drive'). And if there are multiple runs of spaces, they
+		get collapsed to one space as explained above. This is the place to
+		add other stuff to remove or replace as we discover it.
+		
+		Finally, ord() returns the numeric offset of a character... because 
+		unicode(FOO).translate(BAR) requires BAR to be a dict object with 
+		numeric values and labels, the numbers representing the offsets of what
+		is mapped to what. Note that to express a unicode character you have to
+		do u'X' rather than 'X', and in this case it's not a type-able character
+		so X is an escaped sequence.
+		
+		All of this still gets defeated by
+		'''
+		row[self.address] = ' '.join(unicode(row[self.address],errors='replace').translate({
+		  ord('"'):None, ord("'"):None, ord(u'\ufffd'):ord(' ')
+		  }).split());
+		#row[self.address] = unicode(row[self.address],errors='replace').replace('"','').replace("'",'')
 		try: tagged = ua.tag(row[self.address])[0]
 		except ua.RepeatedLabelError: 
 		    csvout.writerow(itemgetter(*self.keep)(row) + tuple(row[self.address]*len(self.chosen_formats)))

@@ -14,6 +14,10 @@ Run with default settings (won't work right for this input file):
 Run keeping columns 0,2,3,4 in the output and using column 4 as the address:
     
     python addressfix.py -a 4 -k 0,2,3,4 -f test_address_input.csv
+    
+    NOTE: Python counts everything from 0!! So -a 4 means the FIFTH column 
+    the way most non-programmers would count them in a spreadsheet, and the
+    0,2,3,4 would likewise be first and the third through fifth columns!
 
 Get help
 
